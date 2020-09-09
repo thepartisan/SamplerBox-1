@@ -1,11 +1,11 @@
 import platform
 import numpy
 import re
-import configparser_samplerbox
+from . import configparser_samplerbox
 import time
 import os
 import sys
-import systemfunctions as sysfunc
+from . import systemfunctions as sysfunc
 from os import path
 
 IS_DEBIAN = platform.linux_distribution()[0].lower() == 'debian'  # Determine if running on RPi (True / False)
@@ -14,16 +14,16 @@ IS_DEBIAN = platform.linux_distribution()[0].lower() == 'debian'  # Determine if
 # IMPORT CONFIG.INI
 ####################
 
-print '\n#### START CONFIG IMPORT ####\n'
+print('\n#### START CONFIG IMPORT ####\n')
 
 config_exists = True
 
 if path.basename(sys.modules['__main__'].__file__) == "samplerbox.py":
         CONFIG_FILE_PATH = "/boot/samplerbox/config.ini"
-        print '>>>> CONFIG: Looking for config.ini in /boot/samplerbox/'
+        print('>>>> CONFIG: Looking for config.ini in /boot/samplerbox/')
         if not os.path.exists(CONFIG_FILE_PATH):
             CONFIG_FILE_PATH = "./config.ini"
-            print '>>>> CONFIG: looking for config.ini in /SamplerBox/'
+            print('>>>> CONFIG: looking for config.ini in /SamplerBox/')
             # try:
             #     file = open(CONFIG_FILE_PATH, 'r') # test if exists
             # except:
@@ -31,10 +31,10 @@ if path.basename(sys.modules['__main__'].__file__) == "samplerbox.py":
             #     config_exists = False
             #     print 'Creating empty config.ini'
             # file.close()
-        print '>>>> CONFIG used: %s' % CONFIG_FILE_PATH
+        print('>>>> CONFIG used: %s' % CONFIG_FILE_PATH)
 else:
     CONFIG_FILE_PATH = "../config.ini"
-    print '>>>> CONFIG: using config.ini in ../'
+    print('>>>> CONFIG: using config.ini in ../')
 
 cp = configparser_samplerbox.Setup(config_file_path=CONFIG_FILE_PATH)
 # If the main config doesn't exist, or if it's empty, build it with default values
@@ -57,17 +57,17 @@ global_volume = (10.0 ** (-12.0 / 20.0)) * (float(global_volume) / 100.0)
 SAMPLES_DIR = str(cp.get_option_by_name('SAMPLES_DIR'))
 if path.basename(sys.modules['__main__'].__file__) == "samplerbox.py":
     if not os.path.isdir(SAMPLES_DIR):
-        print '>>>> SAMPLES WARNING: dir', SAMPLES_DIR, 'not found. Looking for USB drive: /media'
+        print('>>>> SAMPLES WARNING: dir', SAMPLES_DIR, 'not found. Looking for USB drive: /media')
         SAMPLES_DIR = '/media'
         if not os.path.isdir(SAMPLES_DIR) or not os.path.ismount(SAMPLES_DIR): # check if USB is mounted
-            print '>>>> SAMPLES WARNING: USB (', SAMPLES_DIR, ') not found or not mounted. Looking for SD card dir: /samples'
+            print('>>>> SAMPLES WARNING: USB (', SAMPLES_DIR, ') not found or not mounted. Looking for SD card dir: /samples')
             SAMPLES_DIR = '/samples'
             if not os.path.isdir(SAMPLES_DIR) or not os.path.ismount(SAMPLES_DIR):
-                print '>>>> SAMPLES WARNING: dir', SAMPLES_DIR, 'not found. Looking for default: ./media' # use /media/ in /SamplerBox/ if /samples/ doesn't exist
+                print('>>>> SAMPLES WARNING: dir', SAMPLES_DIR, 'not found. Looking for default: ./media') # use /media/ in /SamplerBox/ if /samples/ doesn't exist
                 SAMPLES_DIR = './media'
-    print '>>>> SAMPLES DIR: %s' % SAMPLES_DIR
+    print('>>>> SAMPLES DIR: %s' % SAMPLES_DIR)
 else:
-    print '>>>> SAMPLES: Using default: ../media' # dev env
+    print('>>>> SAMPLES: Using default: ../media') # dev env
     SAMPLES_DIR = '../media'
 USE_BUTTONS = cp.get_option_by_name('USE_BUTTONS')
 USE_HD44780_16x2_LCD = cp.get_option_by_name('USE_HD44780_16x2_LCD')
@@ -120,20 +120,20 @@ def button_assign(config_option_name):
         button_assign_list.extend(['GPIO', gpio_pin])
     # For MIDI messages (eg 176, 60)
     elif 'none' in midi_str.lower():
-        print ' [!] Warning: No MIDI control has been assigned to %s' % config_option_name
+        print(' [!] Warning: No MIDI control has been assigned to %s' % config_option_name)
     else:
         midi_value = midi_str.replace(' ', '')
         midi_value = midi_value[0:midi_value.find('<')].split(',')
         try:
             button_assign_list.extend([int(midi_value[0]), int(midi_value[1])])
         except:
-            print ' [!] Warning: Invalid MIDI navigation assignment: %s ' % midi_value
+            print(' [!] Warning: Invalid MIDI navigation assignment: %s ' % midi_value)
     # For if a device was specified
     if '<' in midi_str:
         midi_device = re.split('[<>]+', midi_str)[1]
         button_assign_list.append(midi_device)
 
-    button_assign_list = filter(None, button_assign_list)  # now remove empty items
+    button_assign_list = [_f for _f in button_assign_list if _f]  # now remove empty items
     # returns: 176, 60, <devicename> or C#2, <devicename> or GPIO, 4
     return button_assign_list
 
@@ -156,7 +156,7 @@ BUTTON_UP_GPIO = int(cp.get_option_by_name('BUTTON_UP_GPIO'))
 BUTTON_DOWN_GPIO = int(cp.get_option_by_name('BUTTON_DOWN_GPIO'))
 BUTTON_FUNC_GPIO = int(cp.get_option_by_name('BUTTON_FUNC_GPIO'))
 
-print '\n#### END CONFIG IMPORT ####\n'
+print('\n#### END CONFIG IMPORT ####\n')
 
 VERSION1 = " -=SAMPLER-BOX=- "
 VERSION2 = "V2.0.1 15-06-2016"
@@ -170,7 +170,7 @@ if IS_DEBIAN:
 else:
     MIDIMAPS_FILE_PATH = 'midimaps.pkl'
 
-print MIDIMAPS_FILE_PATH, ' <--- MIDI maps path'
+print(MIDIMAPS_FILE_PATH, ' <--- MIDI maps path')
 
 ###################
 # SETLIST
@@ -184,7 +184,7 @@ else:
     SETLIST_FILE_PATH = '../setlist/setlist.txt'  # When testing modules
 
 if not os.path.exists(SETLIST_FILE_PATH):
-    print '>>>> SETLIST: %s does not exist. Creating an empty setlist file.' % SETLIST_FILE_PATH
+    print('>>>> SETLIST: %s does not exist. Creating an empty setlist file.' % SETLIST_FILE_PATH)
     sysfunc.mount_samples_dir_rw()  # remount `/samples` as read-write (if using SD card)
     f = open(SETLIST_FILE_PATH, 'w')
     sysfunc.mount_samples_dir_ro()  # remount as read-only
@@ -204,7 +204,7 @@ playingnotes = {}
 lastplayedseq = {}
 sustainplayingnotes = []
 triggernotes = {}
-for channel in xrange(16):
+for channel in range(16):
     triggernotes[channel + 1] = [128] * 128
     playingnotes[channel + 1] = {}
 fillnotes = {}

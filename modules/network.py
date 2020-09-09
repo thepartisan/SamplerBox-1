@@ -4,7 +4,7 @@ import subprocess
 import shlex
 import string
 import time
-import globalvars as gv
+from . import globalvars as gv
 
 
 # TODO: Option to show the IP address on the LCD
@@ -164,7 +164,7 @@ class PasswordInputer(SSIDSelector):
 
             else:
 
-                print 'Password is not long enough. Must be 8...63 characters'
+                print('Password is not long enough. Must be 8...63 characters')
 
     def get_current_char(self):
 
@@ -217,26 +217,26 @@ class NetworkInfo:
 
 if __name__ == '__main__':
 
-    print '----START TESTING WIFI----'
+    print('----START TESTING WIFI----')
 
     w = Wifi()
-    print w.ssids
+    print(w.ssids)
 
     ss = SSIDSelector(w.ssids)
 
-    print 'init SSID:', ss.get_selected_ssid_name()
+    print('init SSID:', ss.get_selected_ssid_name())
 
     ss.next_ssid()
     ss.next_ssid()
     ss.next_ssid()
 
-    print 'selected SSID:', ss.get_selected_ssid_name()
+    print('selected SSID:', ss.get_selected_ssid_name())
 
     pi = PasswordInputer(ss.get_selected_ssid_name())
 
     pi.get_next_char()
     pi.get_next_char()
-    print pi.enter()
+    print(pi.enter())
     pi.get_next_char()
     pi.get_next_char()
     pi.get_next_char()
@@ -247,21 +247,18 @@ if __name__ == '__main__':
     pi.get_next_char()
     pi.get_next_char()
     pi.get_next_char()
-    print pi.enter()
+    print(pi.enter())
     pi.get_next_char()
     pi.get_next_char()
-    print pi.enter()
-    pi.get_next_char()
-    pi.get_next_char()
-    pi.get_next_char()
-    pi.get_next_char()
-    print pi.enter()
-    pi.get_next_char()
-    pi.get_next_char()
-    print pi.enter()
+    print(pi.enter())
     pi.get_next_char()
     pi.get_next_char()
     pi.get_next_char()
+    pi.get_next_char()
+    print(pi.enter())
+    pi.get_next_char()
+    pi.get_next_char()
+    print(pi.enter())
     pi.get_next_char()
     pi.get_next_char()
     pi.get_next_char()
@@ -269,18 +266,21 @@ if __name__ == '__main__':
     pi.get_next_char()
     pi.get_next_char()
     pi.get_next_char()
-    print pi.enter()
-    pi.get_next_char()
-    pi.get_next_char()
-    print pi.enter()
     pi.get_next_char()
     pi.get_next_char()
     pi.get_next_char()
+    print(pi.enter())
     pi.get_next_char()
     pi.get_next_char()
-    print pi.enter()
+    print(pi.enter())
+    pi.get_next_char()
+    pi.get_next_char()
+    pi.get_next_char()
+    pi.get_next_char()
+    pi.get_next_char()
+    print(pi.enter())
 
-    print pi.enter()
+    print(pi.enter())
 
 else:
-    import systemfunctions as sysfunc
+    from . import systemfunctions as sysfunc

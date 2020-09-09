@@ -11,3 +11,4 @@ samplerbox_audio.so
 build/
 media/
 /docs/build/
+*.bak

@@ -9,7 +9,7 @@ str_override - Write over a line with a custom string. eg when SampleBox is stop
 line - the LCD line to be displayed on. Not applicable for 7 segment display.
 '''
 
-import globalvars as gv
+from . import globalvars as gv
 import psutil
 import os
 
@@ -41,20 +41,20 @@ class Displayer:
             if gv.ls.memory_limit_reached == False:
                 if gv.ls.all_presets_loaded == False:
                     if gv.ls.loading_paused == True:
-                        tray.append(unichr(2)) # Pause custom character for Paused loading
+                        tray.append(chr(2)) # Pause custom character for Paused loading
                     else:
-                        tray.append(unichr(6)) # Loading custom hour glass character
+                        tray.append(chr(6)) # Loading custom hour glass character
 
         if len(gv.voices) > 1:
-            voice_blocks = list(unichr(5) * len(gv.voices))  # fill with custom block chars
-            voice_blocks[gv.currvoice - 1] = unichr(1)
+            voice_blocks = list(chr(5) * len(gv.voices))  # fill with custom block chars
+            voice_blocks[gv.currvoice - 1] = chr(1)
             for v in voice_blocks:
                 tray.append(v)
 
         tray.insert(0, ' ')  # add a space before the voices section
 
         if len(tray) > 0:
-            for i in xrange(len(tray)):
+            for i in range(len(tray)):
                 str_index = len(tray) - i
                 preset_string_list[-str_index] = tray[i]
 
@@ -71,15 +71,15 @@ class Displayer:
             # 7 SEGMENT DISPLAY
             ###################
             if gv.USE_I2C_7SEGMENTDISPLAY and gv.IS_DEBIAN:
-                import i2c7segment
+                from . import i2c7segment
                 if 'preset' in changed_var:
                     d = list('----')
                     gv.preset = list(str(gv.preset))
-                    for i in xrange(len(gv.preset)):
+                    for i in range(len(gv.preset)):
                         d[i] = gv.preset[i]
                     d = ''.join(d)
                     if gv.PRINT_LCD_MESSAGES:
-                        print d
+                        print(d)
                     i2c7segment.display(d)
 
         else:
@@ -138,19 +138,19 @@ class Displayer:
                             i = int(gv.global_volume_percent / 100.0 * (gv.LCD_COLS - 1)) + 1
                             vol_line = 'VOLUME %s%%'.center(gv.LCD_COLS, ' ') % str(int(gv.global_volume_percent))
                             self.LCD_SYS.display(vol_line, line=1 + n, is_priority=False, timeout_custom=timeout)
-                            self.LCD_SYS.display((unichr(1) * i), line=2 + n, is_priority=False, timeout_custom=timeout)
+                            self.LCD_SYS.display((chr(1) * i), line=2 + n, is_priority=False, timeout_custom=timeout)
                         elif 'loading' in changed_var:
                             preset_name = gv.SETLIST_LIST[gv.samples_indices[gv.preset]]
                             preset_num_name = str(gv.preset - gv.PRESET_BASE + 1) + ' ' + preset_name
                             preset_line_1 = preset_num_name
-                            loading_line = 'LOADING%s'.ljust(gv.LCD_COLS, ' ') % (unichr(1) * int(gv.percent_loaded * ((gv.LCD_COLS - 7) / 100.0) + 1))
+                            loading_line = 'LOADING%s'.ljust(gv.LCD_COLS, ' ') % (chr(1) * int(gv.percent_loaded * ((gv.LCD_COLS - 7) / 100.0) + 1))
                             self.LCD_SYS.display(preset_line_1, line=1, is_priority=True, timeout_custom=timeout)
                             self.LCD_SYS.display(loading_line, line=2 + n, is_priority=False, timeout_custom=timeout)
                         elif 'effect' in changed_var:
                             effect_name = changed_var[1].upper()
                             effect_line = (effect_name+' %s%%').center(gv.LCD_COLS, ' ') % str(int(gv.percent_effect))
                             self.LCD_SYS.display(effect_line, line=1 + n, is_priority=False, timeout_custom=timeout)
-                            self.LCD_SYS.display(unichr(1) * int(gv.percent_effect * (gv.LCD_COLS / 100.0) + 1), line=2 + n, is_priority=False, timeout_custom=timeout)
+                            self.LCD_SYS.display(chr(1) * int(gv.percent_effect * (gv.LCD_COLS / 100.0) + 1), line=2 + n, is_priority=False, timeout_custom=timeout)
                         elif 'freeingmemory' in changed_var:
                             self.LCD_SYS.display(('FREEING MEMORY..').center(gv.LCD_COLS, ' '),line=2+n, is_priority=False, timeout_custom=timeout)
 
@@ -166,9 +166,9 @@ class Displayer:
                             temp = float(os.popen('vcgencmd measure_temp')
                                          .readline().replace('temp=', '').replace("'C\r", ''))
 
-                            disk_usage_str = 'DSK' + (unichr(1) * SD_usage_percent)
-                            cpu_str = 'CPU' + (unichr(1) * cpu)
-                            ram_str = 'RAM' + (unichr(1) * ram)
+                            disk_usage_str = 'DSK' + (chr(1) * SD_usage_percent)
+                            cpu_str = 'CPU' + (chr(1) * cpu)
+                            ram_str = 'RAM' + (chr(1) * ram)
                             if gv.USE_HD44780_16x2_LCD:
                                 temp_str = ' ' + str(temp)
                             elif gv.USE_HD44780_20x4_LCD:

@@ -73,4 +73,4 @@ if __name__ == '__main__':
     vc = VelocityCurves()
 
     for i in range(1, 128):
-        print i, vc.adjust_vel(i, vc.alpha_1[0])  # test it
+        print(i, vc.adjust_vel(i, vc.alpha_1[0]))  # test it

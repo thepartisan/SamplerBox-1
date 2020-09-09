@@ -1,0 +1,7 @@
+pyaudio 
+cffi 
+sounddevice 
+pyalsaaudio 
+wifi
+rtmidi-python
+rtmidi2
