@@ -75,8 +75,9 @@ except:
 ###################
 
 try:
-    subprocess.call(['systemctl', 'stop', 'serial-getty@ttyAMA0.service'])
-    subprocess.call(['systemctl', 'disable', 'serial-getty@ttyAMA0.service'])
+    #subprocess.call(['systemctl', 'stop', 'serial-getty@ttyAMA0.service'])
+    #subprocess.call(['systemctl', 'disable', 'serial-getty@ttyAMA0.service'])
+    pass
 except:
     print('Failed to stop MIDI serial')
     pass
@@ -217,7 +218,12 @@ try:
                 prev_ports = curr_ports
                 first_loop = False
             time.sleep(0.2)
-
+    def test_loop():
+        while True:
+            notes = [60, 64, 67, 72]
+            for note in notes:
+                gv.ac.noteon(note, midichannel=1, velocity=127)
+                sleep(0.2)
 
     if gv.USE_GUI and not gv.IS_DEBIAN:
 
@@ -235,6 +241,7 @@ try:
             gv.gui.start_gui_loop()  # this is the main loop
 
     else:
+        #test_loop()
         midi_devices_loop()  # this is the main loop
 
 except KeyboardInterrupt:

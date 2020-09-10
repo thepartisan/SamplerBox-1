@@ -77,7 +77,8 @@ class AudioControls(object):
                             gv.playingnotes[midichannel][playnote] = []  # housekeeping
                     # Start David Hilowitz
                     # Get the list of available samples for this note and velocity
-                    notesamples = gv.samples[actual_preset][playnote, velocity, gv.currvoice, midichannel]
+                    sample_preset = gv.samples[actual_preset]
+                    notesamples = sample_preset[playnote, velocity, gv.currvoice, midichannel]
                     # Choose a sample from the list
                     sample = random.choice(notesamples)
                     # If we have no value for lastplayedseq, set it to 0

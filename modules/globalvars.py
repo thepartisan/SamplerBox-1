@@ -166,7 +166,7 @@ VERSION2 = "V2.0.1 15-06-2016"
 ###################
 
 if IS_DEBIAN:
-    MIDIMAPS_FILE_PATH = '/boot/samplerbox/midimaps.pkl'
+    MIDIMAPS_FILE_PATH = './midimaps.pkl'
 else:
     MIDIMAPS_FILE_PATH = 'midimaps.pkl'
 

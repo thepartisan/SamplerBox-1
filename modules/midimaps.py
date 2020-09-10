@@ -33,7 +33,7 @@ class MidiMapping:
     def save_maps(self, obj):
         sysfunc.mount_boot_rw()  # remount `/samples` as read-write (if using SD card)
         with open(self.filename, 'w') as f:
-            pickle.dump(obj, f, 0)
+            pickle.dump(obj, f, '0')
             print('##### Saving new file (%s) #####' % (gv.MIDIMAPS_FILE_PATH))
         sysfunc.mount_boot_ro()  # remount as read-only
 

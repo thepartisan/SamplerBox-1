@@ -479,16 +479,16 @@ class LoadingSamples:
                         pattern = pattern.split(',')[0]
                         pattern = re.escape(pattern.strip())
                         pattern = pattern \
-                            .replace(r"\%midinote", r"(?P<midinote>\d+)") \
-                            .replace(r"\%channel", r"(?P<channel>\d+)") \
-                            .replace(r"\%velocity", r"(?P<velocity>\d+)") \
-                            .replace(r"\%voice", r"(?P<voice>\d+)") \
-                            .replace(r"\%release", r"(?P<release>[a-zA-Z0-9_])") \
-                            .replace(r"\%fillnote", r"(?P<fillnote>[YNGyng])") \
-                            .replace(r"\%mode", r"(?P<mode>\w+)") \
-                            .replace(r"\%seq", r"(?P<seq>\d+)") \
-                            .replace(r"\%notename", r"(?P<notename>[A-Ga-g]#?[0-9])") \
-                            .replace(r"\%mutegroup", r"(?P<mutegroup>\d+)") \
+                            .replace(r"%midinote", r"(?P<midinote>\d+)") \
+                            .replace(r"%channel", r"(?P<channel>\d+)") \
+                            .replace(r"%velocity", r"(?P<velocity>\d+)") \
+                            .replace(r"%voice", r"(?P<voice>\d+)") \
+                            .replace(r"%release", r"(?P<release>[a-zA-Z0-9_])") \
+                            .replace(r"%fillnote", r"(?P<fillnote>[YNGyng])") \
+                            .replace(r"%mode", r"(?P<mode>\w+)") \
+                            .replace(r"%seq", r"(?P<seq>\d+)") \
+                            .replace(r"%notename", r"(?P<notename>[A-Ga-g]#?[0-9])") \
+                            .replace(r"%mutegroup", r"(?P<mutegroup>\d+)") \
                             .replace(r"\*", r".*?").strip()  # .*? => non greedy
 
                         for fname in glob.glob1(dirname, "*.wav"):  # iterate over .wav files in the dir

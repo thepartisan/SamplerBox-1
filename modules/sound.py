@@ -24,9 +24,9 @@ class waveread(wave.Wave_read):
         self._loops = []
         self._ieee = False
         self._file = Chunk(file, bigendian=0)
-        if self._file.getname() != 'RIFF':
+        if self._file.getname() != b'RIFF':
             raise exceptions_samplerbox.WaveReadError('file does not start with RIFF id')
-        if self._file.read(4) != 'WAVE':
+        if self._file.read(4) != b'WAVE':
             raise exceptions_samplerbox.WaveReadError('not a WAVE file')
         self._fmt_chunk_read = 0
         self._data_chunk = None
@@ -37,22 +37,22 @@ class waveread(wave.Wave_read):
             except EOFError:
                 break
             chunkname = chunk.getname()
-            if chunkname == 'fmt ':
+            if chunkname == b'fmt ':
                 self._read_fmt_chunk(chunk)
                 self._fmt_chunk_read = 1
-            elif chunkname == 'data':
+            elif chunkname == b'data':
                 if not self._fmt_chunk_read:
                     raise exceptions_samplerbox.WaveReadError('data chunk before fmt chunk')
                 self._data_chunk = chunk
                 self._nframes = chunk.chunksize // self._framesize
                 self._data_seek_needed = 0
-            elif chunkname == 'cue ':
+            elif chunkname == b'cue ':
                 numcue = struct.unpack('<i', chunk.read(4))[0]
                 for i in range(numcue):
                     id, position, datachunkid, chunkstart, blockstart, sampleoffset = struct.unpack('<iiiiii',
                                                                                                     chunk.read(24))
                     self._cue.append(sampleoffset)
-            elif chunkname == 'smpl':
+            elif chunkname == b'smpl':
                 manuf, prod, sampleperiod, midiunitynote, midipitchfraction, smptefmt, smpteoffs, numsampleloops, samplerdata = struct.unpack(
                     '<iiiiiiiii', chunk.read(36))
                 for i in range(numsampleloops):
@@ -215,8 +215,16 @@ class StartSound:
 
     def start_sounddevice_stream(self, latency='low'):
 
+        self.sd = sounddevice.OutputStream(device=0, 
+            blocksize=512, 
+            latency='low', 
+            samplerate=gv.SAMPLERATE, 
+            channels=2, 
+            dtype='int16' ,
+            callback=audio_callback
+            )
         try:
-            self.sd = sounddevice.OutputStream(device=gv.AUDIO_DEVICE_ID, blocksize=512, latency=latency, samplerate=gv.SAMPLERATE, channels=2, dtype='int16', callback=audio_callback)
+            
             self.sd.start()
             print('>>>> Opened audio device #%i (latency: %ims)' % (gv.AUDIO_DEVICE_ID, self.sd.latency * 1000))
         except:
@@ -240,7 +248,7 @@ class StartSound:
         self.set_alsa_volume(gv.global_volume_percent)
 
     def is_alsa_device(self, device_name):
-        # print 'MIXERS: %s' % alsaaudio.mixers() #show available mixer controls
+        print('MIXERS: %s' % alsaaudio.mixers()) #show available mixer controls
 
         if gv.IS_DEBIAN == False:
             return
@@ -248,6 +256,7 @@ class StartSound:
         if device_name == 'bcm2835':
             mixer_card_index = 0
         else:
+            print('device_name: %s, %s', (device_name,gv.AUDIO_DEVICE_NAME))
             mixer_card_index = re.search('\(hw:(.*),', device_name) # get x from (hw:x,y) in device name
             mixer_card_index = int(mixer_card_index.group(1))
 
@@ -311,8 +320,9 @@ class StartSound:
         device_found = False
 
         try:
-            if gv.AUDIO_DEVICE_ID >= 0:
+            if gv.AUDIO_DEVICE_ID >= 100:
                 print('>>>> Using user-defined AUDIO_DEVICE_ID (%d)' % gv.AUDIO_DEVICE_ID)
+                device_name = gv.AUDIO_DEVICE_NAME
                 return
             else:
                 i = 0
