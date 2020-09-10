@@ -12,3 +12,4 @@ build/
 media/
 /docs/build/
 *.bak
+samples/

@@ -191,7 +191,7 @@ if not os.path.exists(SETLIST_FILE_PATH):
     f.close()
 
 SETLIST_LIST = None  # open(SETLIST_FILE_PATH).read().splitlines()
-NUM_FOLDERS = len(os.walk(SAMPLES_DIR).next()[1])
+NUM_FOLDERS = len(os.walk(SAMPLES_DIR).__next__()[1])
 
 # Disable Freeverb when not on Pi
 if not IS_DEBIAN:

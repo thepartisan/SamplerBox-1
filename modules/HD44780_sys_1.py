@@ -42,7 +42,6 @@ class LCD_SYS_1:
 
             if gv.IS_DEBIAN:
                 import RPi.GPIO as GPIO
-                from RPLCD import CursorMode
                 from RPLCD import CharLCD
 
                 self.lcd = CharLCD(pin_rs=gv.GPIO_LCD_RS, pin_rw=None, pin_e=gv.GPIO_LCD_E,
@@ -52,7 +51,7 @@ class LCD_SYS_1:
                 self.lcd.clear()
 
                 # Hide the cursor
-                self.lcd._set_cursor_mode(CursorMode.hide)
+                self.lcd._set_cursor_mode("hide")
 
                 # Fill the display with blank spaces
                 for i in range(1, gv.LCD_ROWS+1):

@@ -4,3 +4,7 @@ sounddevice
 pyalsaaudio 
 rtmidi-python
 rtmidi2
+psutil
+serial
+RPi.GPIO
+RPLCD
