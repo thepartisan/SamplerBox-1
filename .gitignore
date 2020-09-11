@@ -13,3 +13,4 @@ media/
 /docs/build/
 *.bak
 samples/
+*.so
