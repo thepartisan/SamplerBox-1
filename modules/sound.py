@@ -216,7 +216,7 @@ class StartSound:
     def start_sounddevice_stream(self, latency='low'):
 
         self.sd = sounddevice.OutputStream(device=0, 
-            blocksize=512, 
+            blocksize=128, 
             latency='low', 
             samplerate=gv.SAMPLERATE, 
             channels=2, 
